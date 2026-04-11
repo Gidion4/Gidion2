@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -14,7 +14,7 @@ export async function loadModules(modulesDir, ctx) {
 
   for (const file of files) {
     try {
-      const mod = await import(path.join(dir, file));
+      const mod = await import(pathToFileURL(path.join(dir, file)).href);
       if (mod.name && mod.tools && mod.init) {
         await mod.init(ctx);
         loaded.set(mod.name, {

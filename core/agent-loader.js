@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -17,7 +17,7 @@ export async function loadAgents(agentsDir, ctx) {
 
   for (const file of files) {
     try {
-      const agent = await import(path.join(dir, file));
+      const agent = await import(pathToFileURL(path.join(dir, file)).href);
       if (agent.name && agent.run) {
         agents.set(agent.name, {
           name: agent.name,

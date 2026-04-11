@@ -8,8 +8,8 @@ export default {
     default: 'ollama',
     ollama: {
       endpoint: 'http://127.0.0.1:11434',
-      chatModel: 'qwen2.5:3b',
-      deepModel: 'qwen2.5:7b',
+      chatModel: 'llama3.1:8b',
+      deepModel: 'llama3.1:8b',
       visionModel: 'llava:7b'
     },
   },

@@ -9,7 +9,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const vaultPath = path.resolve(__dirname, '../../data/vault/keys.json');
+const vaultPath = path.resolve(__dirname, '..', 'data', 'vault', 'keys.json');
 
 function getApiKey(service) {
   try {

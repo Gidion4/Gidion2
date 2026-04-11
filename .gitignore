@@ -1,0 +1,7 @@
+node_modules/
+data/vault/
+data/memory/
+data/blacksmith/
+data/trading/
+.env
+*.log

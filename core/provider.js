@@ -55,19 +55,34 @@ export async function chatWithProvider(config, messages) {
 }
 
 async function chatOllama(cfg, messages) {
-  const endpoint = `${cfg.endpoint}/api/chat`;
-  try {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ model: cfg.chatModel, messages, stream: false })
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    return json?.message?.content || '[empty response]';
-  } catch (err) {
-    return `[offline] Ollama not available (${err.message}). Running in fallback mode.`;
+  // Try both localhost and 127.0.0.1
+  const endpoints = [
+    `${cfg.endpoint}/api/chat`,
+    `http://localhost:11434/api/chat`,
+    `http://127.0.0.1:11434/api/chat`
+  ];
+  const unique = [...new Set(endpoints)];
+  
+  for (const endpoint of unique) {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ model: cfg.chatModel, messages, stream: false }),
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      return json?.message?.content || '[empty response]';
+    } catch (err) {
+      console.error(`[provider] Ollama ${endpoint}: ${err.message}`);
+      continue;
+    }
   }
+  return '[offline] Ollama not available. Running in fallback mode.';
 }
 
 async function chatOpenAI(apiKey, messages, model) {

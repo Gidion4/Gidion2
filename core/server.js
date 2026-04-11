@@ -17,6 +17,10 @@ const MIME = {
   '.ico': 'image/x-icon',
 };
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = resolve(__filename, '..');
+const PROJECT_ROOT = resolve(__dirname, '..');
+
 const orch = new Orchestrator(config);
 
 async function handler(req, res) {
@@ -53,7 +57,7 @@ async function handler(req, res) {
       return;
     }
     if (pathname === '/api/portfolio') {
-      const pfPath = './data/trading/portfolio.json';
+      const pfPath = resolve(PROJECT_ROOT, 'data', 'trading', 'portfolio.json');
       if (existsSync(pfPath)) {
         const pf = JSON.parse(readFileSync(pfPath, 'utf8'));
         res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -66,7 +70,7 @@ async function handler(req, res) {
     }
 
     let filePath = pathname === '/' ? '/index.html' : pathname;
-    filePath = resolve('./ui', filePath);
+    filePath = resolve(PROJECT_ROOT, 'ui', '.' + filePath);
     if (existsSync(filePath)) {
       const ext = '.' + filePath.split('.').pop();
       res.writeHead(200, { 'Content-Type': MIME[ext] || 'text/plain' });

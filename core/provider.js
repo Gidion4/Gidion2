@@ -26,17 +26,7 @@ export async function chatWithProvider(config, messages) {
   // Try primary provider
   if (providerName === 'ollama') {
     const result = await chatOllama(providerConfig, messages);
-    if (!result.startsWith('[offline]')) return result;
-
-    // Fallback: try OpenAI if key exists
-    const openaiKey = getApiKey('openai');
-    if (openaiKey) return await chatOpenAI(openaiKey, messages, 'gpt-4o-mini');
-
-    // Fallback: try Anthropic if key exists
-    const anthropicKey = getApiKey('anthropic');
-    if (anthropicKey) return await chatAnthropic(anthropicKey, messages);
-
-    return result; // Return offline message
+    return result;
   }
 
   if (providerName === 'openai') {
@@ -66,7 +56,7 @@ async function chatOllama(cfg, messages) {
   for (const endpoint of unique) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 5000);
+      const timeout = setTimeout(() => controller.abort(), 30000);
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },

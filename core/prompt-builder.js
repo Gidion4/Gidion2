@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const personaPath = path.resolve(__dirname, '../../docs/PERSONA.md');
+const personaPath = path.resolve(__dirname, '..', 'docs', 'PERSONA.md');
 
 export function buildSystemPrompt(config, tools, agents) {
   const persona = fs.existsSync(personaPath) ? fs.readFileSync(personaPath, 'utf8') : '';

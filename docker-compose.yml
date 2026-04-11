@@ -1,0 +1,81 @@
+# GIDION // BLACKSMITH - Docker Compose
+# Local: docker compose up
+# Cloud: docker compose up -d
+
+version: '3.8'
+
+services:
+  # ========================================
+  # GIDION - Main AI Assistant
+  # ========================================
+  gidion:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gidion
+    ports:
+      - "3210:3210"        # Main API
+      - "3211:3211"        # Blacksmith Dashboard
+    volumes:
+      - ./data:/app/data   # Persistent data
+    environment:
+      - NODE_ENV=production
+      - PORT=3210
+      - HOST=0.0.0.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3210/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - gidion-net
+
+  # ========================================
+  # OLLAMA - Local AI (optional)
+  # ========================================
+  # Uncomment to run local AI model
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: gidion-ollama
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama_data:/root/.ollama
+  #   restart: unless-stopped
+  #   networks:
+  #     - gidion-net
+  #   # GPU support (uncomment if you have NVIDIA GPU)
+  #   # deploy:
+  #   #   resources:
+  #   #     reservations:
+  #   #       devices:
+  #   #         - capabilities: [gpu]
+
+  # ========================================
+  # POSTGRESQL - Long-term memory (optional)
+  # ========================================
+  # Uncomment for persistent memory storage
+  # postgres:
+  #   image: postgres:16-alpine
+  #   container_name: gidion-postgres
+  #   environment:
+  #     - POSTGRES_DB=gidion
+  #     - POSTGRES_USER=gidion
+  #     - POSTGRES_PASSWORD=changeme
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   restart: unless-stopped
+  #   networks:
+  #     - gidion-net
+
+networks:
+  gidion-net:
+    driver: bridge
+
+volumes:
+  # ollama_data:
+  # postgres_data:

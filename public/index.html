@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GIDION // ARC CORE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="jarvis.css" />
+</head>
+<body>
+  <div id="app">
+    <div class="background-glow"></div>
+
+    <header class="top-bar">
+      <div class="logo">GIDION // ARC CORE</div>
+      <div class="status-pill" id="core-status-pill">CORE: STABLE</div>
+    </header>
+
+    <main class="layout">
+      <section class="left-panel">
+        <div class="panel-title">AGENTS</div>
+        <div class="agent-list" id="agent-list"></div>
+
+        <div class="panel-title">APPS</div>
+        <div class="apps-list" id="apps-list"></div>
+      </section>
+
+      <section class="core-panel">
+        <div class="arc-core">
+          <div class="arc-ring ring-outer"></div>
+          <div class="arc-ring ring-middle"></div>
+          <div class="arc-ring ring-inner"></div>
+          <div class="arc-core-center">
+            <div class="core-label">GIDION</div>
+            <div class="core-sub">HYBRID INTELLIGENCE</div>
+          </div>
+        </div>
+
+        <div class="core-controls">
+          <button class="btn primary" id="btn-open-console">COMMAND CONSOLE</button>
+          <button class="btn" id="btn-open-evolution">EVOLUTION PANEL</button>
+          <button class="btn" id="btn-open-diagnostics">DIAGNOSTICS</button>
+        </div>
+      </section>
+
+      <section class="right-panel">
+        <div class="panel-title">EVENT STREAM</div>
+        <div class="event-log" id="event-log"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Overlays -->
+  <div class="overlay hidden" id="overlay-console">
+    <div class="overlay-panel">
+      <div class="overlay-header">
+        <span>GIDION // COMMAND CONSOLE</span>
+        <button class="overlay-close" data-target="overlay-console">×</button>
+      </div>
+      <div class="overlay-body">
+        <div class="console-output" id="console-output"></div>
+        <div class="console-input-row">
+          <input id="console-input" placeholder="type a command..." />
+          <button id="console-send">SEND</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="overlay-evolution">
+    <div class="overlay-panel">
+      <div class="overlay-header">
+        <span>GIDION // EVOLUTION</span>
+        <button class="overlay-close" data-target="overlay-evolution">×</button>
+      </div>
+      <div class="overlay-body" id="evolution-body">
+        <p>Evolution engine placeholder.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="overlay-diagnostics">
+    <div class="overlay-panel">
+      <div class="overlay-header">
+        <span>GIDION // DIAGNOSTICS</span>
+        <button class="overlay-close" data-target="overlay-diagnostics">×</button>
+      </div>
+      <div class="overlay-body" id="diagnostics-body">
+        <p>Diagnostics placeholder.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="jarvis.js"></script>
+</body>
+</html>
+
+
+

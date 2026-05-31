@@ -1,0 +1,95 @@
+﻿import { askOllama } from "../tools/ollama.js"
+import { EvolutionContext } from "./agent-engine.js"
+import { InspectionResult } from "./inspector.js"
+import { CodeSuggestions } from "./codegen.js"
+
+export type PatchAction = "create" | "update"
+
+export interface Patch {
+  filePath: string
+  action: PatchAction
+  newContent: string
+}
+
+export interface EvolutionPlan {
+  planText: string
+  patches: Patch[]
+}
+
+export async function proposeEvolutionPlan(
+  ctx: EvolutionContext,
+  inspection: InspectionResult,
+  suggestions: CodeSuggestions
+): Promise<EvolutionPlan> {
+  const prompt = `
+Olet Gidionin evoluutiomoottori.
+
+TÃ„RKEÃ„Ã„:
+- TÃ¤ssÃ¤ evoluutiokierroksessa luodaan VAIN YKSI uusi moduuli.
+- Moduulin nimi: src/core/modularity.ts
+- Action: "create"
+- SisÃ¤ltÃ¶: KOKO TypeScript-tiedosto, joka:
+    * analysoi projektin kansiorakennetta
+    * laskee yksinkertaisia modulariteettimittareita
+    * palauttaa tulokset JSON-muodossa
+- EI muita tiedostoja
+- EI rename/move/delete
+- EI konfiguraatiotiedostoja
+- EI .js-tiedostoja
+- EI abstrakteja ideoita
+- VAIN konkreettinen, toimiva TypeScript-moduuli
+
+Muotoile vastaus TÃ„SMÃ„LLEEN nÃ¤in:
+
+EVOLUTION_PLAN:
+<ihmiselle luettava kuvaus>
+
+PATCHES_JSON:
+[
+  {
+    "filePath": "src/core/modularity.ts",
+    "action": "create",
+    "newContent": "<KOKO TIEDOSTON SISÃ„LTÃ–>"
+  }
+]
+
+Inspektioraportti:
+
+${inspection.report}
+
+Koodigeneraattorin ehdotukset:
+
+${suggestions.suggestionsText}
+`
+
+  const raw = await askOllama(prompt)
+
+  const splitMarker = "PATCHES_JSON:"
+  const idx = raw.indexOf(splitMarker)
+
+  let planText = raw
+  let patches: Patch[] = []
+
+  if (idx !== -1) {
+    planText = raw.substring(0, idx).trim()
+    const jsonPart = raw.substring(idx + splitMarker.length).trim()
+
+    try {
+      const parsed = JSON.parse(jsonPart)
+      if (Array.isArray(parsed)) {
+        patches = parsed.filter(p =>
+          p.filePath === "src/core/modularity.ts" &&
+          p.action === "create" &&
+          typeof p.newContent === "string"
+        )
+      }
+    } catch {}
+  }
+
+  return {
+    planText,
+    patches
+  }
+}
+
+

@@ -1,0 +1,10 @@
+{
+  "name": "PlanningSkill",
+  "description": "Suunnitelmat, roadmapit, projektien vaiheistus.",
+  "capabilities": [
+    "generate_roadmaps",
+    "generate_plans",
+    "generate_step_by_step_guides"
+  ],
+  "status": "active"
+}

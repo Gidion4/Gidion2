@@ -1,0 +1,71 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 4 — SYSTEM SNAPSHOT TEST v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Testaa systemSnapshot.ts -moduulin keskeiset toiminnot:
+//   - snapshotin generointi
+//   - snapshotin rakenne
+//   - kaikkien osien olemassaolo
+//   - deterministinen toiminta
+// ------------------------------------------------------------
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { createSystemSnapshot } from "./systemSnapshot.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function assert(condition: boolean, message: string) {
+  if (!condition) {
+    console.error("✖ TEST FAILED:", message);
+    process.exit(1);
+  }
+}
+
+async function runTests() {
+  console.log("Running SystemSnapshot tests...");
+
+  // --- Test 1: systemSnapshot.ts olemassa ---
+  const snapshotPath = path.join(__dirname, "systemSnapshot.ts");
+  assert(fs.existsSync(snapshotPath), "systemSnapshot.ts is missing");
+
+  // --- Test 2: Snapshot voidaan luoda ---
+  const snapshot = await createSystemSnapshot();
+  assert(typeof snapshot === "object", "createSystemSnapshot did not return an object");
+
+  // --- Test 3: Timestamp on validi ---
+  assert(typeof snapshot.timestamp === "string", "timestamp missing or invalid");
+
+  // --- Test 4: Manifest löytyy ---
+  assert(Array.isArray(snapshot.manifest), "manifest is not an array");
+  assert(snapshot.manifest.length > 0, "manifest is empty");
+
+  // --- Test 5: Overview löytyy ---
+  assert(typeof snapshot.overview === "object", "overview missing");
+  assert(typeof snapshot.overview.totalModules === "number", "overview.totalModules invalid");
+
+  // --- Test 6: Health löytyy ---
+  const expectedHealthKeys = ["kernel", "autonomyLoop", "projectEngine", "agents"];
+  for (const key of expectedHealthKeys) {
+    assert(
+      Object.prototype.hasOwnProperty.call(snapshot.health, key),
+      `Health field '${key}' missing`
+    );
+  }
+
+  // --- Test 7: Diagnostics löytyy ---
+  assert(typeof snapshot.diagnostics === "object", "diagnostics missing");
+  assert(Array.isArray(snapshot.diagnostics.issues), "diagnostics.issues is not an array");
+
+  console.log("✔ All SystemSnapshot tests passed.");
+  process.exit(0);
+}
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runTests();
+}

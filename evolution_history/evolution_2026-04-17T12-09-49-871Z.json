@@ -1,0 +1,194 @@
+{
+  "timestamp": "2026-04-17T12:09:49.871Z",
+  "moduleMetrics": {
+    "totalFiles": 20,
+    "totalLines": 863,
+    "avgLinesPerFile": 43.15,
+    "largestFiles": [
+      {
+        "path": "src\\core\\evolution.ts",
+        "lines": 95
+      },
+      {
+        "path": "src\\core\\architecture-map.ts",
+        "lines": 91
+      },
+      {
+        "path": "src\\core\\agent-engine.ts",
+        "lines": 83
+      },
+      {
+        "path": "src\\core\\inspector.ts",
+        "lines": 82
+      },
+      {
+        "path": "src\\core\\modularity.ts",
+        "lines": 82
+      },
+      {
+        "path": "src\\core\\writer.ts",
+        "lines": 75
+      },
+      {
+        "path": "src\\core\\evolution-planner.ts",
+        "lines": 68
+      },
+      {
+        "path": "src\\core\\server.ts",
+        "lines": 58
+      },
+      {
+        "path": "src\\core\\evolution-analysis.ts",
+        "lines": 54
+      },
+      {
+        "path": "src\\core\\codegen.ts",
+        "lines": 38
+      }
+    ]
+  },
+  "architectureMap": {
+    "nodes": [
+      {
+        "file": "src\\core\\agent-engine.ts",
+        "imports": [
+          "./inspector",
+          "./codegen",
+          "./writer",
+          "./modularity",
+          "./architecture-map",
+          "./evolution-memory",
+          "./evolution-engine-3"
+        ]
+      },
+      {
+        "file": "src\\core\\architecture-map.ts",
+        "imports": [
+          "fs",
+          "path"
+        ]
+      },
+      {
+        "file": "src\\core\\codegen.ts",
+        "imports": [
+          "../tools/ollama",
+          "./agent-engine",
+          "./inspector"
+        ]
+      },
+      {
+        "file": "src\\core\\controller.ts",
+        "imports": []
+      },
+      {
+        "file": "src\\core\\evolution-analysis.ts",
+        "imports": []
+      },
+      {
+        "file": "src\\core\\evolution-engine-3.ts",
+        "imports": [
+          "./agent-engine",
+          "./evolution-analysis",
+          "./evolution-planner"
+        ]
+      },
+      {
+        "file": "src\\core\\evolution-memory.ts",
+        "imports": [
+          "fs",
+          "path"
+        ]
+      },
+      {
+        "file": "src\\core\\evolution-planner.ts",
+        "imports": [
+          "./evolution-analysis"
+        ]
+      },
+      {
+        "file": "src\\core\\evolution.ts",
+        "imports": [
+          "../tools/ollama",
+          "./agent-engine",
+          "./inspector",
+          "./codegen"
+        ]
+      },
+      {
+        "file": "src\\core\\flow.ts",
+        "imports": []
+      },
+      {
+        "file": "src\\core\\gidion-core.ts",
+        "imports": [
+          "readline",
+          "../tools/ollama"
+        ]
+      },
+      {
+        "file": "src\\core\\healthcheck.ts",
+        "imports": [
+          "axios"
+        ]
+      },
+      {
+        "file": "src\\core\\inspector.ts",
+        "imports": [
+          "fs",
+          "path",
+          "../tools/ollama",
+          "./agent-engine"
+        ]
+      },
+      {
+        "file": "src\\core\\modularity.ts",
+        "imports": [
+          "fs",
+          "path"
+        ]
+      },
+      {
+        "file": "src\\core\\server.ts",
+        "imports": [
+          "http",
+          "ws",
+          "../tools/ollama"
+        ]
+      },
+      {
+        "file": "src\\core\\writer.ts",
+        "imports": [
+          "fs",
+          "path",
+          "readline",
+          "./evolution"
+        ]
+      },
+      {
+        "file": "src\\tools\\filesystem.ts",
+        "imports": []
+      },
+      {
+        "file": "src\\tools\\ollama.ts",
+        "imports": [
+          "axios"
+        ]
+      },
+      {
+        "file": "src\\tools\\shell.ts",
+        "imports": []
+      },
+      {
+        "file": "src\\tools\\web.ts",
+        "imports": []
+      }
+    ],
+    "totalFiles": 20
+  },
+  "inspectionReport": "**Ytimekäs yleiskuvaus nykytilasta**\n\nThe provided codebase, Gidion, is a TypeScript-based system that aims to improve its own architecture and self-evolution capabilities. The system consists of multiple modules, including `agent-engine`, `architecture-map`, `codegen`, `controller`, `evolution-analysis`, `evolution-engine-3`, `evolution-memory`, and `evolution-planner`. These modules interact with each other through APIs and file I/O operations.\n\nThe main goals of Gidion are to:\n\n1. Analyze its own architecture and identify potential areas for improvement.\n2. Generate suggestions for code changes that can help improve the system's self-evolution capabilities.\n3. Plan and execute evolution steps based on the analysis and suggestions.\n\n**Tärkeimmistä parannuskohteista (bullet-lista)**\n\n1. **Modulaarisuuden lisääminen**: Gidion's architecture is currently quite flat, which makes it difficult to scale and maintain. Adding modularity through separation of concerns, interfaces, and abstract classes can improve the system's maintainability and reusability.\n2. **Koodigeneraattorin kehittäminen**: The code generation module needs to be more sophisticated in generating suggestions for code changes that actually make sense. This could involve integrating natural language processing (NLP) or machine learning (ML) techniques.\n3. **Evoluutiokierrosten parantaminen**: The evolution engine's deterministic analysis and plan generation need to be improved to produce more effective evolution steps. This could involve incorporating more advanced algorithms, such as genetic programming or simulated annealing.\n4. **Testaus ja varmistus**: Gidion lacks comprehensive testing, which makes it difficult to ensure the correctness of its evolution steps. Adding unit tests, integration tests, and end-to-end tests can help validate the system's behavior.\n\n**Konkreettiset ehdotukset, miten Gidion voisi kehittää itseään (itse-evoluutio)**\n\n1. **Modulaarisuuden lisääminen**: Create separate modules for each major functionality, such as `modularity`, `inspector`, and `evolution-engine`. This will help reduce coupling between components and make the system more maintainable.\n2. **Koodigeneraattorin kehittäminen**: Integrate NLP or ML techniques to generate more sophisticated code suggestions that take into account the system's architecture, dependencies, and constraints.\n3. **Evoluutiokierrosten parantaminen**: Implement a more advanced evolution algorithm, such as genetic programming or simulated annealing, to produce more effective evolution steps.\n4. **Testaus ja varmistus**: Write comprehensive tests for each module and the system as a whole to ensure the correctness of its behavior.\n\nBy addressing these areas, Gidion can improve its architecture, self-evolution capabilities, and overall maintainability and scalability.",
+  "codeSuggestions": "As Gidion's code generator, I'll provide concrete suggestions for new modules, files, or classes that can enhance Gidion's self-evolution capabilities. I'll also outline potential refactorings of existing files without actually writing the code.\n\n**New Module Suggestions:**\n\n1. **Code Analysis Engine**: A new module that analyzes the system's codebase and identifies areas for improvement, such as duplicated logic, unused functions, or performance bottlenecks.\n2. **Knowledge Graph**: A module that maintains a graph-based representation of Gidion's architecture, dependencies, and constraints. This can facilitate more informed decision-making during evolution steps.\n3. **Design Patterns Library**: A module that provides a collection of design patterns, such as creational, structural, or behavioral patterns, to help improve the system's maintainability and reusability.\n\n**File Refactorings:**\n\n1. **agent-engine.ts**: Extract a new class `AgentExecutor` from this file, responsible for executing agents' tasks. This can improve modularity and make the code easier to reason about.\n2. **architecture-map.ts**: Replace the current architecture map implementation with a graph-based representation using a library like `graphlib`. This can simplify the maintenance of Gidion's architecture.\n3. **codegen.ts**: Extract a new class `CodeGenerator` from this file, responsible for generating code suggestions based on analysis results. This can improve modularity and make the code easier to reason about.\n\n**Patch-Like Suggestions:**\n\n1. **modulaarisuuden lisääminen** (Modularization):\n\t* Create a new directory `modules` to hold separate modules for each major functionality.\n\t* Move existing modules into this directory, renaming them to follow a consistent naming convention (e.g., camelCase).\n2. **koodigeneraattorin kehittäminen** (Code Generation Improvement):\n\t* Integrate NLP or ML techniques by adding a new class `CodeAnalysis` that analyzes the system's codebase and generates suggestions for code changes.\n\t* Replace existing code generation logic with this new class, allowing it to drive the evolution process.\n3. **evoluutiokierrosten parantaminen** (Evolution Improvement):\n\t* Implement genetic programming or simulated annealing algorithms in a new class `EvolutionEngine` that replaces the current deterministic analysis and plan generation.\n\t* Integrate this new engine with the existing evolution planner to produce more effective evolution steps.\n\nBy implementing these suggestions, Gidion can improve its self-evolution capabilities, modularity, and maintainability, ultimately becoming a more sophisticated and robust system.",
+  "evolutionPlan": "EVOLUTION ENGINE 3.1\n\nDeterministinen analyysi suoritettu.\n\nRefaktorointikandidaatit:\n- src\\core\\evolution.ts (95 riviä)\n- src\\core\\architecture-map.ts (91 riviä)\n- src\\core\\agent-engine.ts (83 riviä)\n- src\\core\\inspector.ts (82 riviä)\n- src\\core\\modularity.ts (82 riviä)\n- src\\core\\writer.ts (75 riviä)\n- src\\core\\evolution-planner.ts (68 riviä)\n\nTässä kierroksessa generoidaan ensimmäinen konkreettinen patch.\n",
+  "appliedPatches": [
+    "src/core/README_EVOLUTION.md"
+  ]
+}

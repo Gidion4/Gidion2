@@ -1,0 +1,81 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 3 — PIPELINE ENGINE v2
+// ------------------------------------------------------------
+// Tämä versio:
+//   - tukee dynaamisia pipelineja (Task Planner)
+//   - ajaa agentteja yhtenäisellä rajapinnalla
+//   - palauttaa selkeän step-by-step -raportin
+//   - toimii Organization Layerin kanssa
+//
+// v1: staattiset pipeline-määrittelyt
+// v2: dynaaminen, agenttiagnostinen, org-yhteensopiva
+// v3: itseoptimoiva pipeline (CORE-agentin ohjaama)
+// ------------------------------------------------------------
+import { CORE } from "../agents/coreAgent";
+import { CODEX } from "../agents/codexAgent";
+import { OPS } from "../agents/opsAgent";
+import { VISION } from "../agents/visionAgent";
+// ------------------------------------------------------------
+// AGENT DISPATCHER
+// ------------------------------------------------------------
+async function runAgentByName(agent, step) {
+    switch (agent) {
+        case "CORE":
+            return CORE(step);
+        case "CODEX":
+            return CODEX(step);
+        case "OPS":
+            return OPS(step);
+        case "VISION":
+            return VISION(step);
+        default:
+            return {
+                ok: false,
+                error: `Tuntematon agentti: ${agent}`
+            };
+    }
+}
+// ------------------------------------------------------------
+// PIPELINE ENGINE v2
+// ------------------------------------------------------------
+export async function runPipeline(pipeline, context) {
+    const results = [];
+    for (const step of pipeline.steps) {
+        const res = await runAgentByName(step.agent, step);
+        results.push({
+            name: step.name,
+            agent: step.agent,
+            ok: res.ok,
+            result: res.result,
+            error: res.error
+        });
+        if (!res.ok) {
+            return {
+                ok: false,
+                pipelineId: pipeline.id,
+                steps: results
+            };
+        }
+    }
+    return {
+        ok: true,
+        pipelineId: pipeline.id,
+        steps: results
+    };
+}
+// ------------------------------------------------------------
+// SUORA KÄYTTÖ (CLI)
+// ------------------------------------------------------------
+if (require.main === module) {
+    const demo = {
+        id: "demo",
+        description: "Test pipeline",
+        steps: [
+            { name: "s1", agent: "CORE", intent: "analyze", input: "Hei maailma" },
+            { name: "s2", agent: "OPS", intent: "run", input: "Suorita komento" }
+        ]
+    };
+    runPipeline(demo).then(res => {
+        console.log(JSON.stringify(res, null, 2));
+    });
+}

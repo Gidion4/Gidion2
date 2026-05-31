@@ -1,17 +1,12 @@
 {
-  "name": "gidion-blacksmith",
-  "version": "2.0.0",
-  "description": "GIDION v2.0 - Autonomous AI Assistant with Blacksmith Trading System and Autopilot",
+  "name": "gidion",
+  "version": "1.0.0",
   "type": "module",
-  "main": "start.js",
+  "main": "dist/main.js",
   "scripts": {
-    "start": "node start.js",
-    "server": "node core/server.js"
+    "start": "node dist/main.js"
   },
-  "keywords": ["ai", "trading", "autonomous", "blacksmith", "solana", "memecoin", "autopilot"],
-  "author": "Gidion",
-  "license": "MIT",
-  "engines": {
-    "node": ">=18.0.0"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
+

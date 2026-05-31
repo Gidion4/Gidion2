@@ -1,0 +1,11 @@
+{
+  "name": "ProjectSkill",
+  "description": "Projektien luonti, koodipohjat, GitHub-rakenteet, case-study.",
+  "capabilities": [
+    "generate_project_structure",
+    "generate_code_scaffolds",
+    "generate_case_studies",
+    "generate_documentation"
+  ],
+  "status": "active"
+}

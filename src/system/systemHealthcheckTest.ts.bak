@@ -1,0 +1,60 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 4 — SYSTEM HEALTHCHECK TEST v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Testaa systemHealthcheck.ts -moduulin keskeiset toiminnot:
+//   - healthcheck-funktion olemassaolo
+//   - raportin rakenne
+//   - kaikkien kenttien olevan true
+// ------------------------------------------------------------
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { runHealthcheck } from "./systemHealthcheck.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function assert(condition: boolean, message: string) {
+  if (!condition) {
+    console.error("✖ TEST FAILED:", message);
+    process.exit(1);
+  }
+}
+
+async function runTests() {
+  console.log("Running SystemHealthcheck tests...");
+
+  // --- Test 1: systemHealthcheck.ts olemassa ---
+  const healthPath = path.join(__dirname, "systemHealthcheck.ts");
+  assert(fs.existsSync(healthPath), "systemHealthcheck.ts is missing");
+
+  // --- Test 2: Healthcheck palauttaa validin raportin ---
+  const report = await runHealthcheck();
+
+  assert(typeof report === "object", "Healthcheck did not return an object");
+
+  const expectedKeys = ["kernel", "autonomyLoop", "projectEngine", "agents"];
+  for (const key of expectedKeys) {
+    assert(
+      Object.prototype.hasOwnProperty.call(report, key),
+      `Missing key '${key}' in healthcheck report`
+    );
+  }
+
+  // --- Test 3: Kaikki kentät ovat true ---
+  for (const key of expectedKeys) {
+    assert(report[key] === true, `Healthcheck field '${key}' is not true`);
+  }
+
+  console.log("✔ All SystemHealthcheck tests passed.");
+  process.exit(0);
+}
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runTests();
+}

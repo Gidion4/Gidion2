@@ -1,0 +1,9 @@
+{
+  "defaultModel": "llama3",
+  "models": {
+    "llama3": {
+      "endpoint": "http://localhost:11434/api/generate",
+      "maxTokens": 4096
+    }
+  }
+}

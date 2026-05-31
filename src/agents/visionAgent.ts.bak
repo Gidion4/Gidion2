@@ -1,0 +1,13 @@
+import { AgentRequest, AgentResponse, runAgent } from "./agentBase";
+
+async function visionHandler(req: AgentRequest): Promise<AgentResponse> {
+  return {
+    ok: true,
+    result: `VISION-agentti analysoi visuaalista sisältöä: ${req.input}`
+  };
+}
+
+export async function VISION(req: AgentRequest) {
+  return runAgent(visionHandler, req);
+}
+

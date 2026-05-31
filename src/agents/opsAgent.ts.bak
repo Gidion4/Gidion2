@@ -1,0 +1,12 @@
+import { AgentRequest, AgentResponse, runAgent } from "./agentBase";
+
+async function opsHandler(req: AgentRequest): Promise<AgentResponse> {
+  return {
+    ok: true,
+    result: `OPS-agentti suorittaa järjestelmäoperaation: ${req.input}`
+  };
+}
+
+export async function OPS(req: AgentRequest) {
+  return runAgent(opsHandler, req);
+}

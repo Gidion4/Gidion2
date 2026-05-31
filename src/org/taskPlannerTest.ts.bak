@@ -1,0 +1,71 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 3 — TASK PLANNER TEST HARNESS v1
+// ------------------------------------------------------------
+// Tämä tiedosto testaa:
+//   - taskPlanner.ts
+//   - pipelineEngine v2 yhteensopivuuden
+//   - testGoal1, testGoal2, testGoal3 pilkkomisen
+// ------------------------------------------------------------
+
+import { planGoal } from "./taskPlanner";
+import { Goal } from "./goalEngine";
+
+function createMockGoal(title: string, priority: number, tags: string[]): Goal {
+  return {
+    id: "mock-" + Math.random().toString(36).substring(2),
+    title,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    status: "pending",
+    priority,
+    tags
+  };
+}
+
+async function run() {
+  console.log("=== GIDION LEVEL 3 — TASK PLANNER TEST ===");
+
+  // ------------------------------------------------------------
+  // TestGoal1
+  // ------------------------------------------------------------
+  const g1 = createMockGoal(
+    "tee testi pipeline",
+    2,
+    ["test", "pipeline"]
+  );
+  const p1 = planGoal(g1);
+
+  // ------------------------------------------------------------
+  // TestGoal2 (videon analysointi URL:ista)
+  // ------------------------------------------------------------
+  const g2 = createMockGoal(
+    "tee järjestelmä joka analysoi videoita url linkin kautta näkemällä koko videon, ja tekee sen pohjalta toimenpiteet alusta loppuun halutulla tavalla",
+    1,
+    ["video", "analysis", "system"]
+  );
+  const p2 = planGoal(g2);
+
+  // ------------------------------------------------------------
+  // TestGoal3 (raportti Gidionin kehitystehtävistä)
+  // ------------------------------------------------------------
+  const g3 = createMockGoal(
+    "tee raportti tehtävistä, jotka perustuvat gidionin kehittämiseen ja päivittämiseen",
+    3,
+    ["report", "meta", "gidion"]
+  );
+  const p3 = planGoal(g3);
+
+  // ------------------------------------------------------------
+  // Tulostetaan pipelinejen rakenteet
+  // ------------------------------------------------------------
+  console.log("\n=== PIPELINE 1 (testGoal1) ===");
+  console.log(JSON.stringify(p1, null, 2));
+
+  console.log("\n=== PIPELINE 2 (testGoal2) ===");
+  console.log(JSON.stringify(p2, null, 2));
+
+  console.log("\n=== PIPELINE 3 (testGoal3) ===");
+  console.log(JSON.stringify(p3, null, 2));
+}
+
+run();

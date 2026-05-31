@@ -1,0 +1,3 @@
+notepad C:\Gidion\src\core\gidionCore.ts
+
+export type GidionMode = "chat" | "income_lab" | "product" | "marketing" | "sales" | "scaling";

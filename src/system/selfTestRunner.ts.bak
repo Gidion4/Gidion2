@@ -1,0 +1,74 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 4 — SELF TEST RUNNER v2 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Tämä versio:
+//   - löytää automaattisesti kaikki *Test.ts -tiedostot
+//   - ajaa ne järjestyksessä
+//   - raportoi onnistumiset ja virheet
+//   - toimii ts-noden kanssa
+// ------------------------------------------------------------
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+async function runTestFile(filePath: string) {
+  console.log(`\n▶ Running test: ${filePath}`);
+
+  try {
+    await import(filePath);
+  } catch (err) {
+    console.error(`✖ Test failed in ${filePath}`);
+    console.error(err);
+    process.exit(1);
+  }
+}
+
+function findTestFiles(dir: string, results: string[] = []) {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      findTestFiles(fullPath, results);
+    } else if (entry.isFile() && entry.name.endsWith("Test.ts")) {
+      results.push(fullPath);
+    }
+  }
+
+  return results;
+}
+
+async function runAllTests() {
+  console.log("GIDION SELF TEST RUNNER v2");
+  console.log("---------------------------");
+
+  const testFiles = findTestFiles(path.join(__dirname, ".."));
+
+  if (testFiles.length === 0) {
+    console.log("No test files found.");
+    process.exit(0);
+  }
+
+  console.log(`Found ${testFiles.length} test files.`);
+
+  for (const file of testFiles) {
+    await runTestFile(`file://${file}`);
+  }
+
+  console.log("\n✔ All tests passed successfully.");
+  process.exit(0);
+}
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runAllTests();
+}
+

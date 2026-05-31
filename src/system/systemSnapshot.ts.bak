@@ -1,0 +1,58 @@
+// ------------------------------------------------------------
+// GIDION ULTRAHYBRID LEVEL 4 — SYSTEM SNAPSHOT v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Tämä moduuli tuottaa täydellisen snapshotin koko järjestelmän tilasta.
+//
+// Snapshot sisältää:
+//   - manifestin
+//   - overview’n
+//   - healthcheckin
+//   - diagnostics-raportin
+//
+// Snapshot toimii:
+//   - selfHealing-järjestelmän baseline-tilana
+//   - UI-kerroksen "System State Viewer" -paneelin datana
+// ------------------------------------------------------------
+
+import { systemManifest } from "./systemManifest.js";
+import { generateSystemOverview } from "./systemOverview.js";
+import { runHealthcheck } from "./systemHealthcheck.js";
+import { runDiagnostics } from "./systemDiagnostics.js";
+
+export interface SystemSnapshot {
+  timestamp: string;
+  manifest: typeof systemManifest;
+  overview: ReturnType<typeof generateSystemOverview>;
+  health: Awaited<ReturnType<typeof runHealthcheck>>;
+  diagnostics: Awaited<ReturnType<typeof runDiagnostics>>;
+}
+
+export async function createSystemSnapshot(): Promise<SystemSnapshot> {
+  const overview = generateSystemOverview();
+  const health = await runHealthcheck();
+  const diagnostics = await runDiagnostics();
+
+  return {
+    timestamp: new Date().toISOString(),
+    manifest: systemManifest,
+    overview,
+    health,
+    diagnostics
+  };
+}
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  createSystemSnapshot().then((snapshot) => {
+    console.log("Gidion UltraHybrid Level 4 — System Snapshot");
+    console.log("Timestamp:", snapshot.timestamp);
+    console.log("\nManifest entries:", snapshot.manifest.length);
+    console.log("Categories:", snapshot.overview.categories.map(c => c.category));
+    console.log("\nHealth:");
+    console.table(snapshot.health);
+    console.log("\nDiagnostics issues:", snapshot.diagnostics.issues);
+  });
+}

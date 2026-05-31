@@ -1,0 +1,54 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 4 — SELF HEALING PLANNER TEST v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Testaa systemSelfHealingPlanner.ts -moduulin keskeiset toiminnot:
+//   - generateHealingPlan palauttaa validin suunnitelman
+//   - actions on array
+//   - action-objektit ovat oikeassa muodossa
+//   - requiresManualReview toimii
+// ------------------------------------------------------------
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { generateHealingPlan } from "./systemSelfHealingPlanner.ts";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+function assert(condition, message) {
+    if (!condition) {
+        console.error("✖ TEST FAILED:", message);
+        process.exit(1);
+    }
+}
+async function runTests() {
+    console.log("Running SelfHealingPlanner tests...");
+    // --- Test 1: systemSelfHealingPlanner.ts olemassa ---
+    const plannerPath = path.join(__dirname, "systemSelfHealingPlanner.ts");
+    assert(fs.existsSync(plannerPath), "systemSelfHealingPlanner.ts is missing");
+    // --- Test 2: generateHealingPlan toimii ---
+    const plan = await generateHealingPlan();
+    assert(typeof plan === "object", "generateHealingPlan did not return an object");
+    // --- Test 3: timestamp on validi ---
+    assert(typeof plan.timestamp === "string", "timestamp missing or invalid");
+    // --- Test 4: actions on array ---
+    assert(Array.isArray(plan.actions), "actions is not an array");
+    // --- Test 5: action-objektit ovat oikeassa muodossa ---
+    if (plan.actions.length > 0) {
+        for (const action of plan.actions) {
+            assert(typeof action.issueKey === "string", "action.issueKey missing or invalid");
+            assert(typeof action.description === "string", "action.description missing or invalid");
+            assert(["low", "medium", "high"].includes(action.severity), "action.severity invalid");
+            assert(Array.isArray(action.steps), "action.steps is not an array");
+            assert(action.steps.length > 0, "action.steps is empty");
+        }
+    }
+    // --- Test 6: requiresManualReview on boolean ---
+    assert(typeof plan.requiresManualReview === "boolean", "requiresManualReview invalid");
+    console.log("✔ All SelfHealingPlanner tests passed.");
+    process.exit(0);
+}
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+if (import.meta.url === `file://${process.argv[1]}`) {
+    runTests();
+}

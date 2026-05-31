@@ -1,0 +1,105 @@
+﻿// ------------------------------------------------------------
+// GIDION LEVEL 6 â€” OPTIMIZATION DASHBOARD DATA TEST v2 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { fileURLToPath } from "node:url";
+import { getOptimizationDashboardData } from "./systemOptimizationDashboardData.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function assert(condition: boolean, message: string) {
+  if (!condition) {
+    console.error("âœ– TEST FAILED:", message);
+    process.exit(1);
+  }
+}
+
+async function runTests() {
+  console.log("Running OptimizationDashboardData tests...");
+
+  // --- Test 1: systemOptimizationDashboardData.ts olemassa ---
+  const modulePath = path.join(__dirname, "systemOptimizationDashboardData.ts");
+  assert(fs.existsSync(modulePath), "systemOptimizationDashboardData.ts is missing");
+
+  // --- Test 2: getOptimizationDashboardData toimii ---
+  const data = await getOptimizationDashboardData();
+  assert(typeof data === "object", "getOptimizationDashboardData did not return an object");
+
+  // --- Test 3: timestamp ---
+  assert(typeof data.timestamp === "string", "timestamp missing or invalid");
+
+  // --- Test 4: status ---
+  assert(typeof data.status === "object", "status missing or invalid");
+  assert(typeof data.status.fullyOptimized === "boolean", "status.fullyOptimized invalid");
+  assert(typeof data.status.adviceCount === "number", "status.adviceCount invalid");
+  assert(typeof data.status.executedSteps === "number", "status.executedSteps invalid");
+
+  // --- Test 5: metrics ---
+  assert(typeof data.metrics === "object", "metrics missing or invalid");
+
+  // health
+  assert(typeof data.metrics.health === "object", "metrics.health invalid");
+  assert(typeof data.metrics.health.healthy === "boolean", "metrics.health.healthy invalid");
+  assert(typeof data.metrics.health.issues === "number", "metrics.health.issues invalid");
+  assert(
+    typeof data.metrics.health.requiresManualReview === "boolean",
+    "metrics.health.requiresManualReview invalid"
+  );
+
+  // selfHealing
+  assert(typeof data.metrics.selfHealing === "object", "metrics.selfHealing invalid");
+  assert(
+    typeof data.metrics.selfHealing.plannedActions === "number",
+    "metrics.selfHealing.plannedActions invalid"
+  );
+  assert(
+    typeof data.metrics.selfHealing.executedDryRunActions === "number",
+    "metrics.selfHealing.executedDryRunActions invalid"
+  );
+  assert(
+    typeof data.metrics.selfHealing.dryRunAllSuccessful === "boolean",
+    "metrics.selfHealing.dryRunAllSuccessful invalid"
+  );
+
+  // repair
+  assert(typeof data.metrics.repair === "object", "metrics.repair invalid");
+  assert(typeof data.metrics.repair.plannedActions === "number", "metrics.repair.plannedActions invalid");
+  assert(typeof data.metrics.repair.executedSteps === "number", "metrics.repair.executedSteps invalid");
+  assert(typeof data.metrics.repair.fullyRepaired === "boolean", "metrics.repair.fullyRepaired invalid");
+
+  // --- Test 6: advice ---
+  assert(Array.isArray(data.advice), "advice is not an array");
+  for (const a of data.advice) {
+    assert(typeof a.key === "string", "advice.key invalid");
+    assert(typeof a.description === "string", "advice.description invalid");
+    assert(
+      a.recommendedAction === null || typeof a.recommendedAction === "string",
+      "advice.recommendedAction invalid"
+    );
+    assert(["low", "medium", "high"].includes(a.severity), "advice.severity invalid");
+  }
+
+  // --- Test 7: execution ---
+  assert(Array.isArray(data.execution), "execution is not an array");
+  for (const e of data.execution) {
+    assert(typeof e.actionKey === "string", "execution.actionKey invalid");
+    assert(typeof e.success === "boolean", "execution.success invalid");
+    assert(typeof e.message === "string", "execution.message invalid");
+  }
+
+  console.log("âœ” All OptimizationDashboardData tests passed.");
+  process.exit(0);
+}
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runTests();
+}
+
+

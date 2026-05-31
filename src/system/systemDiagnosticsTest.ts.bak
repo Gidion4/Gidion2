@@ -1,0 +1,72 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 4 — SYSTEM DIAGNOSTICS TEST v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Testaa systemDiagnostics.ts -moduulin keskeiset toiminnot:
+//   - diagnostisen raportin generointi
+//   - raportin rakenne
+//   - kaikkien kenttien olemassaolo
+//   - deterministinen toiminta
+// ------------------------------------------------------------
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { runDiagnostics } from "./systemDiagnostics.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function assert(condition: boolean, message: string) {
+  if (!condition) {
+    console.error("✖ TEST FAILED:", message);
+    process.exit(1);
+  }
+}
+
+async function runTests() {
+  console.log("Running SystemDiagnostics tests...");
+
+  // --- Test 1: systemDiagnostics.ts olemassa ---
+  const diagPath = path.join(__dirname, "systemDiagnostics.ts");
+  assert(fs.existsSync(diagPath), "systemDiagnostics.ts is missing");
+
+  // --- Test 2: Diagnostiikka voidaan suorittaa ---
+  const report = await runDiagnostics();
+  assert(typeof report === "object", "runDiagnostics did not return an object");
+
+  // --- Test 3: Timestamp on validi ---
+  assert(typeof report.timestamp === "string", "timestamp missing or invalid");
+
+  // --- Test 4: manifestCount on validi ---
+  assert(
+    typeof report.manifestCount === "number" && report.manifestCount > 0,
+    "manifestCount invalid"
+  );
+
+  // --- Test 5: categories on validi ---
+  assert(Array.isArray(report.categories), "categories is not an array");
+  assert(report.categories.length > 0, "categories array is empty");
+
+  // --- Test 6: health on validi ---
+  const expectedHealthKeys = ["kernel", "autonomyLoop", "projectEngine", "agents"];
+  for (const key of expectedHealthKeys) {
+    assert(
+      Object.prototype.hasOwnProperty.call(report.health, key),
+      `Health field '${key}' missing`
+    );
+  }
+
+  // --- Test 7: issues on validi ---
+  assert(Array.isArray(report.issues), "issues is not an array");
+
+  console.log("✔ All SystemDiagnostics tests passed.");
+  process.exit(0);
+}
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runTests();
+}

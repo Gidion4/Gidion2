@@ -1,0 +1,61 @@
+// ------------------------------------------------------------
+// GIDION ULTRAHYBRID LEVEL 4 — SYSTEM HEALTHCHECK v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Tämä moduuli tarkistaa järjestelmän tilan:
+//
+//   - Kernelin olemassaolo
+//   - AutonomyLoopin toimivuus
+//   - ProjectEnginen toimivuus
+//   - Agenttien rekisteröinti
+//
+// Tämä toimii tulevan selfHealing-järjestelmän perustana.
+// ------------------------------------------------------------
+
+import { OrganizationKernel } from "../kernel/organizationKernel.js";
+import { AgentOrchestrator } from "../agents/agentOrchestrator.js";
+import { AgentCore } from "../agents/agentCore.js";
+
+export interface HealthReport {
+  kernel: boolean;
+  autonomyLoop: boolean;
+  projectEngine: boolean;
+  agents: boolean;
+}
+
+export async function runHealthcheck(): Promise<HealthReport> {
+  const kernel = new OrganizationKernel();
+  const orchestrator = new AgentOrchestrator();
+
+  // Rekisteröidään yksi agentti testimielessä
+  orchestrator.registerAgent(new AgentCore("HealthcheckAgent"));
+
+  // Testataan projektimoottori
+  kernel.addProject("Healthcheck Project", 1, ["ping"]);
+  const projectEngineOK = kernel.getStatus().pendingProjects === 1;
+
+  // Testataan autonomia (käynnistyy ja pysähtyy)
+  kernel.startAutonomy();
+  const autonomyOK = kernel.getStatus().autonomyRunning === true;
+  kernel.stopAutonomy();
+
+  // Testataan agentit
+  const agentsOK = orchestrator.getAgents().length > 0;
+
+  return {
+    kernel: true,
+    autonomyLoop: autonomyOK,
+    projectEngine: projectEngineOK,
+    agents: agentsOK
+  };
+}
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runHealthcheck().then((report) => {
+    console.log("Gidion UltraHybrid Level 4 — System Healthcheck");
+    console.table(report);
+  });
+}

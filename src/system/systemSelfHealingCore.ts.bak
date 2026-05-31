@@ -1,0 +1,109 @@
+// ------------------------------------------------------------
+// GIDION ULTRAHYBRID LEVEL 4 — SELF HEALING CORE v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Tämä moduuli muodostaa self-healing-järjestelmän ytimen.
+// Se EI tee korjauksia, mutta:
+//   - analysoi snapshotin
+//   - analysoi diagnostics-raportin
+//   - analysoi healthcheckin
+//   - tunnistaa ongelmat
+//   - tuottaa korjausehdotuksia
+//
+// Tämä on Level 5 automaattisen korjauskerroksen perusta.
+// ------------------------------------------------------------
+
+import { createSystemSnapshot } from "./systemSnapshot.js";
+
+export interface HealingIssue {
+  key: string;
+  description: string;
+  severity: "low" | "medium" | "high";
+  suggestion: string;
+}
+
+export interface HealingReport {
+  timestamp: string;
+  issues: HealingIssue[];
+  healthy: boolean;
+}
+
+export async function analyzeSystemState(): Promise<HealingReport> {
+  const snapshot = await createSystemSnapshot();
+  const issues: HealingIssue[] = [];
+
+  // --- Healthcheck-analyysi ---
+  const health = snapshot.health;
+
+  if (!health.kernel) {
+    issues.push({
+      key: "kernel",
+      description: "Kernel is not healthy",
+      severity: "high",
+      suggestion: "Restart kernel module or inspect kernel logs"
+    });
+  }
+
+  if (!health.autonomyLoop) {
+    issues.push({
+      key: "autonomyLoop",
+      description: "Autonomy loop is not running",
+      severity: "high",
+      suggestion: "Verify autonomy loop scheduler and event triggers"
+    });
+  }
+
+  if (!health.projectEngine) {
+    issues.push({
+      key: "projectEngine",
+      description: "Project engine is not functioning",
+      severity: "medium",
+      suggestion: "Check project engine initialization and dependencies"
+    });
+  }
+
+  if (!health.agents) {
+    issues.push({
+      key: "agents",
+      description: "No agents registered",
+      severity: "medium",
+      suggestion: "Ensure agent registry is loaded and agent modules are available"
+    });
+  }
+
+  // --- Diagnostics-analyysi ---
+  for (const diagIssue of snapshot.diagnostics.issues) {
+    issues.push({
+      key: "diagnostics",
+      description: diagIssue,
+      severity: "medium",
+      suggestion: "Review diagnostics output and verify module integrity"
+    });
+  }
+
+  return {
+    timestamp: new Date().toISOString(),
+    issues,
+    healthy: issues.length === 0
+  };
+}
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  analyzeSystemState().then((report) => {
+    console.log("Gidion UltraHybrid Level 4 — Self Healing Core");
+    console.log("Timestamp:", report.timestamp);
+    console.log("Healthy:", report.healthy);
+    console.log("\nIssues:");
+    if (report.issues.length === 0) {
+      console.log("✔ No issues detected.");
+    } else {
+      for (const issue of report.issues) {
+        console.log(`- [${issue.severity}] ${issue.key}: ${issue.description}`);
+        console.log(`    Suggestion: ${issue.suggestion}`);
+      }
+    }
+  });
+}

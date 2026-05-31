@@ -1,0 +1,64 @@
+// ------------------------------------------------------------
+// GIDION ULTRAHYBRID LEVEL 4 — SYSTEM STATE EXPORTER v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Tämä moduuli:
+//   - luo snapshotin
+//   - vie sen JSON-tiedostoon
+//   - toimii selfHealing-järjestelmän "state archive" -kerroksena
+//   - toimii UI-kerroksen "Export System State" -toiminnon taustalla
+//
+// Turvallisuus:
+//   - ei koskaan ylikirjoita tiedostoa ilman lupaa
+//   - luo kansion jos sitä ei ole
+// ------------------------------------------------------------
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { createSystemSnapshot } from "./systemSnapshot.ts";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+export async function exportSystemState(outputDir = "./exports", fileName = `system_snapshot_${Date.now()}.json`) {
+    try {
+        const snapshot = await createSystemSnapshot();
+        const fullDir = path.resolve(outputDir);
+        const fullPath = path.join(fullDir, fileName);
+        // Luo kansio jos sitä ei ole
+        if (!fs.existsSync(fullDir)) {
+            fs.mkdirSync(fullDir, { recursive: true });
+        }
+        // Älä ylikirjoita olemassa olevaa tiedostoa
+        if (fs.existsSync(fullPath)) {
+            return {
+                success: false,
+                filePath: null,
+                error: `File already exists: ${fullPath}`
+            };
+        }
+        fs.writeFileSync(fullPath, JSON.stringify(snapshot, null, 2), "utf-8");
+        return {
+            success: true,
+            filePath: fullPath
+        };
+    }
+    catch (err) {
+        return {
+            success: false,
+            filePath: null,
+            error: err?.message || "Unknown error"
+        };
+    }
+}
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+if (import.meta.url === `file://${process.argv[1]}`) {
+    exportSystemState().then((result) => {
+        console.log("Gidion UltraHybrid Level 4 — System State Exporter");
+        if (result.success) {
+            console.log("✔ Exported to:", result.filePath);
+        }
+        else {
+            console.log("✖ Export failed:", result.error);
+        }
+    });
+}

@@ -1,0 +1,82 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 4 — SELF INSPECTOR v2 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Tämä moduuli toimii Gidionin sisäisenä diagnostiikkamoottorina.
+//
+// Vastuut:
+//   - tarkistaa projektirakenteen
+//   - varmistaa, että kaikki Level 4 -moduulit ovat olemassa
+//   - varmistaa, että testitiedostot löytyvät
+//   - raportoi puuttuvat moduulit
+//   - toimii pohjana selfHealing-järjestelmälle
+// ------------------------------------------------------------
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+interface ModuleCheck {
+  name: string;
+  path: string;
+}
+
+const REQUIRED_MODULES: ModuleCheck[] = [
+  { name: "ProjectEngine", path: "../project/projectEngine.ts" },
+  { name: "ProjectEngineTest", path: "../project/projectEngineTest.ts" },
+  { name: "AutonomyLoop", path: "../autonomy/autonomyLoop.ts" },
+  { name: "AutonomyLoopTest", path: "../autonomy/autonomyLoopTest.ts" },
+  { name: "OrganizationKernel", path: "../kernel/organizationKernel.ts" },
+  { name: "OrganizationKernelTest", path: "../kernel/organizationKernelTest.ts" },
+  { name: "AgentCore", path: "../agents/agentCore.ts" },
+  { name: "AgentCoreTest", path: "../agents/agentCoreTest.ts" },
+  { name: "AgentOrchestrator", path: "../agents/agentOrchestrator.ts" },
+  { name: "AgentOrchestratorTest", path: "../agents/agentOrchestratorTest.ts" },
+  { name: "SelfTestRunner", path: "./selfTestRunner.ts" }
+];
+
+function checkModuleExists(relativePath: string): boolean {
+  const fullPath = path.join(__dirname, relativePath);
+  return fs.existsSync(fullPath);
+}
+
+function inspectSystem() {
+  console.log("GIDION SELF INSPECTOR v2");
+  console.log("-------------------------\n");
+
+  const missing: string[] = [];
+
+  for (const mod of REQUIRED_MODULES) {
+    const exists = checkModuleExists(mod.path);
+
+    if (exists) {
+      console.log(`✔ ${mod.name} found`);
+    } else {
+      console.log(`✖ ${mod.name} MISSING`);
+      missing.push(mod.name);
+    }
+  }
+
+  console.log("\nInspection complete.");
+
+  if (missing.length > 0) {
+    console.log("\nMissing modules:");
+    for (const m of missing) console.log(" - " + m);
+    process.exit(1);
+  } else {
+    console.log("\n✔ All required modules are present.");
+    process.exit(0);
+  }
+}
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  inspectSystem();
+}
+
+

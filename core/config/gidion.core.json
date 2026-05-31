@@ -1,0 +1,17 @@
+﻿{
+  "name": "Gidion",
+  "version": "0.1",
+  "description": "Monikykyinen AI-assistentti, laajennettavissa moduuleilla.",
+  "modes": [
+    "chat",
+    "builder",
+    "income_lab",
+    "analysis",
+    "creative"
+  ],
+  "skills": [],
+  "safety": {
+    "no_financial_decisions": true,
+    "no_real_money_actions": true
+  }
+}

@@ -1,0 +1,18 @@
+﻿{
+  "name": "IncomeLab",
+  "description": "Tulovirtojen ideointi, suunnittelu, toteutus, markkinointi ja skaalaus.",
+  "capabilities": [
+    "generate_income_ideas",
+    "evaluate_potential",
+    "create_income_plans",
+    "generate_digital_products",
+    "generate_marketing_material",
+    "generate_sales_material",
+    "generate_scaling_strategies"
+  ],
+  "safety": {
+    "no_financial_decisions": true,
+    "no_real_money_actions": true
+  },
+  "status": "active"
+}

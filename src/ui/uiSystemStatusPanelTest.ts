@@ -1,0 +1,93 @@
+﻿// ------------------------------------------------------------
+// GIDION UI v1 â€” SYSTEM STATUS PANEL TEST v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Testaa uiSystemStatusPanel.ts -moduulin keskeiset toiminnot:
+//   - buildSystemStatusPanel palauttaa validin paneelirakenteen
+//   - scaffold + data yhdistyvÃ¤t oikein
+//   - kaikki kentÃ¤t ovat oikeassa muodossa
+//   - UI-kerros saa deterministisen paneelirakenteen
+// ------------------------------------------------------------
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { buildSystemStatusPanel } from "./uiSystemStatusPanel.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function assert(condition: boolean, message: string) {
+  if (!condition) {
+    console.error("âœ– TEST FAILED:", message);
+    process.exit(1);
+  }
+}
+
+async function runTests() {
+  console.log("Running UISystemStatusPanel tests...");
+
+  // --- Test 1: uiSystemStatusPanel.ts olemassa ---
+  const modulePath = path.join(__dirname, "uiSystemStatusPanel.ts");
+  assert(fs.existsSync(modulePath), "uiSystemStatusPanel.ts is missing");
+
+  // --- Test 2: buildSystemStatusPanel toimii ---
+  const panel = await buildSystemStatusPanel();
+  assert(typeof panel === "object", "buildSystemStatusPanel did not return an object");
+
+  // --- Test 3: scaffold on validi ---
+  assert(typeof panel.scaffold === "object", "panel.scaffold missing or invalid");
+  assert(typeof panel.scaffold.title === "string", "panel.scaffold.title invalid");
+  assert(typeof panel.scaffold.style === "object", "panel.scaffold.style invalid");
+  assert(typeof panel.scaffold.header === "object", "panel.scaffold.header invalid");
+
+  // --- Test 4: data on validi ---
+  assert(typeof panel.data === "object", "panel.data missing or invalid");
+
+  // health
+  assert(typeof panel.data.health === "object", "panel.data.health invalid");
+  assert(typeof panel.data.health.healthy === "boolean", "panel.data.health.healthy invalid");
+  assert(typeof panel.data.health.issues === "number", "panel.data.health.issues invalid");
+  assert(
+    typeof panel.data.health.requiresManualReview === "boolean",
+    "panel.data.health.requiresManualReview invalid"
+  );
+
+  // selfHealing
+  assert(typeof panel.data.selfHealing === "object", "panel.data.selfHealing invalid");
+  assert(
+    typeof panel.data.selfHealing.plannedActions === "number",
+    "panel.data.selfHealing.plannedActions invalid"
+  );
+  assert(
+    typeof panel.data.selfHealing.executedDryRunActions === "number",
+    "panel.data.selfHealing.executedDryRunActions invalid"
+  );
+  assert(
+    typeof panel.data.selfHealing.dryRunAllSuccessful === "boolean",
+    "panel.data.selfHealing.dryRunAllSuccessful invalid"
+  );
+
+  // repair
+  assert(typeof panel.data.repair === "object", "panel.data.repair invalid");
+  assert(typeof panel.data.repair.plannedActions === "number", "panel.data.repair.plannedActions invalid");
+  assert(typeof panel.data.repair.executedSteps === "number", "panel.data.repair.executedSteps invalid");
+  assert(typeof panel.data.repair.fullyRepaired === "boolean", "panel.data.repair.fullyRepaired invalid");
+
+  // optimization
+  assert(typeof panel.data.optimization === "object", "panel.data.optimization invalid");
+  assert(typeof panel.data.optimization.fullyOptimized === "boolean", "panel.data.optimization.fullyOptimized invalid");
+  assert(typeof panel.data.optimization.adviceCount === "number", "panel.data.optimization.adviceCount invalid");
+  assert(typeof panel.data.optimization.executedSteps === "number", "panel.data.optimization.executedSteps invalid");
+
+  console.log("âœ” All UISystemStatusPanel tests passed.");
+  process.exit(0);
+}
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runTests();
+}
+

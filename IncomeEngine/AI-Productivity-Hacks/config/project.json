@@ -1,0 +1,28 @@
+﻿{
+  "projectName": "AI-Powered Productivity Hacks",
+  "version": "1.0.0",
+  "type": "ebook+pdf+blog+social",
+  "status": "active",
+  "targets": [
+    "ebook",
+    "pdf",
+    "blog_series",
+    "social_series"
+  ],
+  "pipeline": [
+    "generate_outline",
+    "write_chapters",
+    "assemble_ebook",
+    "derive_blog_posts",
+    "derive_social_posts"
+  ],
+  "paths": {
+    "root": "C:\Gidion\IncomeEngine\AI-Productivity-Hacks",
+    "chapters": "C:\Gidion\IncomeEngine\AI-Productivity-Hacks\\src\\chapters",
+    "marketing": "C:\Gidion\IncomeEngine\AI-Productivity-Hacks\\src\\marketing",
+    "blog": "C:\Gidion\IncomeEngine\AI-Productivity-Hacks\\src\\blog",
+    "social": "C:\Gidion\IncomeEngine\AI-Productivity-Hacks\\src\\social",
+    "output": "C:\Gidion\IncomeEngine\AI-Productivity-Hacks\\output",
+    "logs": "C:\Gidion\IncomeEngine\AI-Productivity-Hacks\\logs"
+  }
+}

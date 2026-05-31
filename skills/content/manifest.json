@@ -1,0 +1,12 @@
+﻿{
+  "name": "ContentSkill",
+  "description": "Artikkelit, blogit, e-kirjat, some, PDF-tuotteet",
+  "capabilities": [
+    "generate_articles",
+    "generate_ebooks",
+    "generate_pdfs",
+    "generate_blog_series",
+    "generate_social_series"
+  ],
+  "status": "planned"
+}

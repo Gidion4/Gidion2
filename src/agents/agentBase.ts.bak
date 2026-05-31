@@ -1,0 +1,29 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 3 — STANDARD AGENT BASE v2
+// ------------------------------------------------------------
+
+export interface AgentRequest {
+  intent: string;
+  input: string;
+  payload?: unknown;
+}
+
+export interface AgentResponse {
+  ok: boolean;
+  result?: unknown;
+  error?: string;
+}
+
+export async function runAgent(
+  handler: (req: AgentRequest) => Promise<AgentResponse>,
+  req: AgentRequest
+): Promise<AgentResponse> {
+  try {
+    return await handler(req);
+  } catch (err: any) {
+    return {
+      ok: false,
+      error: err?.message ?? "Agent error"
+    };
+  }
+}

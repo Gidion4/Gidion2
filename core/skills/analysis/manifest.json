@@ -1,0 +1,11 @@
+{
+  "name": "AnalysisSkill",
+  "description": "Markkina-analyysi, data-analyysi, simulaatiot, trendit.",
+  "capabilities": [
+    "market_analysis",
+    "trend_analysis",
+    "data_summary",
+    "strategy_simulation"
+  ],
+  "status": "active"
+}

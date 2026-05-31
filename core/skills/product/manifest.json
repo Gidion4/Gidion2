@@ -1,0 +1,12 @@
+{
+  "name": "ProductSkill",
+  "description": "Digitaaliset tuotteet, template-paketit, UI-kitit, skriptipaketit.",
+  "capabilities": [
+    "generate_templates",
+    "generate_ui_kits",
+    "generate_script_packs",
+    "generate_digital_products",
+    "bundle_products"
+  ],
+  "status": "active"
+}

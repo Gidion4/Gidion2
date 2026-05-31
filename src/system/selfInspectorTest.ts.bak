@@ -1,0 +1,55 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 4 — SELF INSPECTOR TEST v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Testaa selfInspector.ts -moduulin keskeiset toiminnot:
+//   - moduulien tarkistus
+//   - puuttuvien moduulien raportointi
+//   - deterministinen toiminta
+//
+// Huom: Tämä testaa vain tarkistuslogiikan, ei koko CLI-ajon.
+// ------------------------------------------------------------
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function assert(condition: boolean, message: string) {
+  if (!condition) {
+    console.error("✖ TEST FAILED:", message);
+    process.exit(1);
+  }
+}
+
+async function runTests() {
+  console.log("Running SelfInspector tests...");
+
+  // --- Test 1: Varmistetaan, että selfInspector.ts on olemassa ---
+  const inspectorPath = path.join(__dirname, "selfInspector.ts");
+  assert(fs.existsSync(inspectorPath), "selfInspector.ts is missing");
+
+  // --- Test 2: Varmistetaan, että selfTestRunner.ts on olemassa ---
+  const runnerPath = path.join(__dirname, "selfTestRunner.ts");
+  assert(fs.existsSync(runnerPath), "selfTestRunner.ts is missing");
+
+  // --- Test 3: Varmistetaan, että projektirakenne on olemassa ---
+  const projectEnginePath = path.join(__dirname, "../project/projectEngine.ts");
+  assert(fs.existsSync(projectEnginePath), "projectEngine.ts is missing");
+
+  // --- Test 4: Varmistetaan, että agenttikerros on olemassa ---
+  const agentCorePath = path.join(__dirname, "../agents/agentCore.ts");
+  assert(fs.existsSync(agentCorePath), "agentCore.ts is missing");
+
+  console.log("✔ All SelfInspector tests passed.");
+  process.exit(0);
+}
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runTests();
+}

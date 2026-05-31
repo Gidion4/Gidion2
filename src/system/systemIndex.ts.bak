@@ -1,0 +1,35 @@
+// ------------------------------------------------------------
+// GIDION ULTRAHYBRID LEVEL 4 — SYSTEM INDEX v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Tämä tiedosto kokoaa yhteen kaikki järjestelmän keskeiset moduulit.
+// Se toimii:
+//   - keskitettynä import-pisteenä
+//   - dokumentaation juurena
+//   - introspektion lähtöpisteenä
+//   - Level 5 -arkkitehtuurin perustana
+// ------------------------------------------------------------
+
+// Core systems
+export { OrganizationKernel } from "../kernel/organizationKernel.js";
+export { AutonomyLoop } from "../autonomy/autonomyLoop.js";
+export { ProjectEngine } from "../project/projectEngine.js";
+
+// Agents
+export { AgentCore } from "../agents/agentCore.js";
+export { AgentOrchestrator } from "../agents/agentOrchestrator.js";
+
+// System utilities
+export { } from "./selfInspector.js";
+export { } from "./selfTestRunner.js";
+
+// Bootstrap
+export { } from "../bootstrap/bootstrap.js";
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  console.log("Gidion UltraHybrid Level 4 — System Index");
+  console.log("All core modules are now accessible from this entrypoint.");
+}

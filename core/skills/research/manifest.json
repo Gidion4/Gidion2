@@ -1,0 +1,11 @@
+{
+  "name": "ResearchSkill",
+  "description": "Tutkimus, tiedonhaku, lähteiden analyysi.",
+  "capabilities": [
+    "research_topics",
+    "compare_sources",
+    "extract_key_points",
+    "generate_research_summaries"
+  ],
+  "status": "active"
+}

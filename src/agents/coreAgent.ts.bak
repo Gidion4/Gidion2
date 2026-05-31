@@ -1,0 +1,13 @@
+import { AgentRequest, AgentResponse, runAgent } from "./agentBase";
+
+async function coreHandler(req: AgentRequest): Promise<AgentResponse> {
+  return {
+    ok: true,
+    result: `CORE-agentti analysoi: ${req.input}`
+  };
+}
+
+export async function CORE(req: AgentRequest) {
+  return runAgent(coreHandler, req);
+}
+

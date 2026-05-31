@@ -1,0 +1,40 @@
+// ------------------------------------------------------------
+// GIDION ARC CORE — EXAMPLE APP v1
+// ------------------------------------------------------------
+// Pipeline:
+//   1) CORE analysoi tehtävän
+//   2) CODEX generoi koodin suunnitelman perusteella
+//   3) OPS tarkistaa järjestelmän ja palauttaa lopputuloksen
+// ------------------------------------------------------------
+import { runBrainTask } from "../../brain/router";
+export async function runExampleApp(userText) {
+    // 1) CORE analyysi
+    const core = await runBrainTask({
+        intent: "analyze",
+        text: userText,
+        preferredAgent: "CORE"
+    });
+    // 2) CODEX generointi
+    const codex = await runBrainTask({
+        intent: "generate-code",
+        text: userText,
+        preferredAgent: "CODEX",
+        payload: {
+            fromCore: core.response?.result
+        }
+    });
+    // 3) OPS tarkistus
+    const ops = await runBrainTask({
+        intent: "inspect-system",
+        text: "Inspect system after code generation.",
+        preferredAgent: "OPS",
+        payload: {
+            fromCodex: codex.response?.result
+        }
+    });
+    return {
+        core,
+        codex,
+        ops
+    };
+}

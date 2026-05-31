@@ -1,0 +1,68 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 4 — SYSTEM INDEX TEST v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Testaa systemIndex.ts -moduulin keskeiset toiminnot:
+//   - tiedoston olemassaolo
+//   - exporttien löytyminen
+//   - deterministinen rakenne
+//
+// Huom: Tämä EI käynnistä järjestelmää.
+// ------------------------------------------------------------
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function assert(condition: boolean, message: string) {
+  if (!condition) {
+    console.error("✖ TEST FAILED:", message);
+    process.exit(1);
+  }
+}
+
+async function runTests() {
+  console.log("Running SystemIndex tests...");
+
+  // --- Test 1: systemIndex.ts olemassa ---
+  const indexPath = path.join(__dirname, "systemIndex.ts");
+  assert(fs.existsSync(indexPath), "systemIndex.ts is missing");
+
+  // --- Test 2: Import toimii ---
+  let indexModule: any = null;
+  try {
+    indexModule = await import(`file://${indexPath}`);
+  } catch (err) {
+    console.error(err);
+    assert(false, "systemIndex.ts failed to import");
+  }
+
+  // --- Test 3: Exportit löytyvät ---
+  const expectedExports = [
+    "OrganizationKernel",
+    "AutonomyLoop",
+    "ProjectEngine",
+    "AgentCore",
+    "AgentOrchestrator"
+  ];
+
+  for (const exp of expectedExports) {
+    assert(
+      Object.prototype.hasOwnProperty.call(indexModule, exp),
+      `Export '${exp}' missing from systemIndex.ts`
+    );
+  }
+
+  console.log("✔ All SystemIndex tests passed.");
+  process.exit(0);
+}
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runTests();
+}

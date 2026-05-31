@@ -1,0 +1,73 @@
+// ------------------------------------------------------------
+// GIDION ARC CORE — SELF EVOLUTION: CODEGEN v1
+// ------------------------------------------------------------
+// Tämä kerros ottaa inspectorin löydökset ja generoi:
+//   - konkreettisia parannusehdotuksia
+//   - refaktorointisuunnitelmia
+//   - arkkitehtuurisia korjauksia
+//
+// v1: ei tee muutoksia, vain ehdottaa
+// v2: generoi oikeaa koodia
+// v3: automaattinen itseparannus (valvottu)
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+// SUGGESTION ENGINE
+// ------------------------------------------------------------
+export function generateSuggestions(inspection) {
+    const suggestions = [];
+    for (const issue of inspection.issues) {
+        let suggestion = "";
+        switch (issue.type) {
+            case "placeholder":
+                suggestion =
+                    "Korvaa placeholder-koodi oikealla toteutuksella. Suositus: lisää agenttikohtainen logiikka tai poista mockit.";
+                break;
+            case "comment-density":
+                suggestion =
+                    "Tiedostossa on liikaa kommentteja. Suositus: tiivistä kommentteja ja siirrä dokumentaatio README- tai docs-kansioon.";
+                break;
+            case "agent-incomplete":
+                suggestion =
+                    "Agentin logiikka sisältää keskeneräisiä kohtia. Suositus: viimeistele invoke()-metodin haarat ja lisää virheenkäsittely.";
+                break;
+            case "pipeline-weak-typing":
+                suggestion =
+                    "Pipeline käyttää liian löysiä tyyppejä. Suositus: määrittele tarkemmat tyypit PipelineStep.input ja transform()-funktioille.";
+                break;
+            default:
+                suggestion = "Yleinen parannusehdotus: tarkista tiedoston rakenne.";
+                break;
+        }
+        suggestions.push({
+            file: issue.file,
+            issueType: issue.type,
+            suggestion
+        });
+    }
+    // ------------------------------------------------------------
+    // SUMMARY
+    // ------------------------------------------------------------
+    const summary = [
+        `Löydettyjä ongelmia: ${inspection.issues.length}`,
+        `Generoituja ehdotuksia: ${suggestions.length}`,
+        suggestions.length === 0
+            ? "Koodipohja näyttää hyvältä."
+            : "Koodipohja sisältää parannettavia kohtia."
+    ];
+    return {
+        ok: true,
+        suggestions,
+        summary
+    };
+}
+// ------------------------------------------------------------
+// SUORA KÄYTTÖ (CLI)
+// ------------------------------------------------------------
+if (require.main === module) {
+    const { inspectCodebase } = require("./inspector");
+    const path = require("path");
+    const root = path.join(__dirname, "..");
+    const inspection = inspectCodebase(root);
+    const result = generateSuggestions(inspection);
+    console.log(JSON.stringify(result, null, 2));
+}

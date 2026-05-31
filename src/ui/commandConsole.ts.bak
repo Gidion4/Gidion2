@@ -1,0 +1,82 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 3 — COMMAND CONSOLE v2
+// ------------------------------------------------------------
+// Tämä konsoli toimii Level 3 -tilassa:
+//   - käyttäjä antaa vain luonnollisen kielen komennon
+//   - UI Bridge v2 tulkitsee sen organisaatiokomennoksi
+//   - Organization Controller hoitaa loput
+//
+// v1: brain/app routing
+// v2: organization-first natural language console
+// v3: jatkuva autonominen komentotila
+// ------------------------------------------------------------
+
+import readline from "readline";
+import { handleUICommand } from "./uiBridge";
+
+// ------------------------------------------------------------
+// PARSINTA: kaikki luonnollinen kieli → org-komento
+// ------------------------------------------------------------
+
+export function parseConsoleInput(input: string) {
+  return {
+    type: "org",
+    text: input.trim()
+  };
+}
+
+// ------------------------------------------------------------
+// KÄSITTELY
+// ------------------------------------------------------------
+
+export async function handleConsoleInput(input: string) {
+  const cmd = parseConsoleInput(input);
+  const res = await handleUICommand(cmd);
+  return res;
+}
+
+// ------------------------------------------------------------
+// CLI-MOODI
+// ------------------------------------------------------------
+
+export function startConsole() {
+  console.log("=== GIDION LEVEL 3 — ORGANIZATION CONSOLE ===");
+  console.log("Kirjoita komento. Esimerkkejä:");
+  console.log("  tee järjestelmä joka analysoi kuvia");
+  console.log("  tee raportti tämän viikon tehtävistä");
+  console.log("  listaa tavoitteet");
+  console.log("----------------------------------------------");
+
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  rl.setPrompt("> ");
+  rl.prompt();
+
+  rl.on("line", async (line) => {
+    if (line.trim() === "exit") {
+      rl.close();
+      return;
+    }
+
+    const res = await handleConsoleInput(line);
+    console.log(JSON.stringify(res, null, 2));
+
+    rl.prompt();
+  });
+
+  rl.on("close", () => {
+    console.log("Konsoli suljettu.");
+    process.exit(0);
+  });
+}
+
+// ------------------------------------------------------------
+// AUTO-START JOS AJETAAN SUORAAN
+// ------------------------------------------------------------
+
+if (require.main === module) {
+  startConsole();
+}

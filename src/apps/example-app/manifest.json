@@ -1,0 +1,8 @@
+{
+  "id": "example-app",
+  "name": "Example App",
+  "description": "Demonstration pipeline: CORE → CODEX → OPS",
+  "version": "1.0.0",
+  "agents": ["CORE", "CODEX", "OPS"],
+  "entry": "./handler"
+}

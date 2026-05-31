@@ -1,0 +1,49 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 4 — PROJECT ENGINE TEST v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Testaa projectEngine.ts -moduulin keskeiset toiminnot:
+//   - projektin luonti
+//   - priorisointi
+//   - aktivointi
+//   - valmistuminen
+//   - listaukset
+// ------------------------------------------------------------
+import { ProjectEngine } from "./projectEngine.ts";
+function assert(condition, message) {
+    if (!condition) {
+        console.error("✖ TEST FAILED:", message);
+        process.exit(1);
+    }
+}
+async function runTests() {
+    console.log("Running ProjectEngine tests...");
+    const engine = new ProjectEngine();
+    // --- Test 1: Projektin luonti ---
+    const p1 = engine.addProject("Test Project A", 2, ["task1"]);
+    assert(p1.name === "Test Project A", "Project name mismatch");
+    assert(p1.priority === 2, "Project priority mismatch");
+    // --- Test 2: Priorisointi ---
+    const p2 = engine.addProject("High Priority", 1, ["taskX"]);
+    const all = engine.getAllProjects();
+    assert(all[0].id === p2.id, "Priority sorting failed");
+    // --- Test 3: Aktivointi ---
+    const active = engine.activateNextProject();
+    assert(active !== null, "activateNextProject returned null");
+    assert(active.status === "active", "Project not activated");
+    // --- Test 4: Valmistuminen ---
+    const completed = engine.completeProject(active.id);
+    assert(completed === true, "completeProject returned false");
+    const completedList = engine.getCompletedProjects();
+    assert(completedList.length === 1, "Completed project not listed");
+    // --- Test 5: Pending-lista ---
+    const pending = engine.getPendingProjects();
+    assert(pending.length === 1, "Pending project count mismatch");
+    console.log("✔ All ProjectEngine tests passed.");
+    process.exit(0);
+}
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+if (import.meta.url === `file://${process.argv[1]}`) {
+    runTests();
+}

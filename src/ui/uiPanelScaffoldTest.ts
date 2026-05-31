@@ -1,0 +1,66 @@
+﻿// ------------------------------------------------------------
+// GIDION UI v1 â€” PANEL SCAFFOLD TEST v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Testaa uiPanelScaffold.ts -moduulin keskeiset toiminnot:
+//   - createPanelScaffold palauttaa validin paneelikonfiguraation
+//   - style- ja header-kentÃ¤t ovat oikeassa muodossa
+//   - UI-kerros saa deterministisen paneelipohjan
+// ------------------------------------------------------------
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { createPanelScaffold } from "./uiPanelScaffold.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function assert(condition: boolean, message: string) {
+  if (!condition) {
+    console.error("âœ– TEST FAILED:", message);
+    process.exit(1);
+  }
+}
+
+async function runTests() {
+  console.log("Running UIPanelScaffold tests...");
+
+  // --- Test 1: uiPanelScaffold.ts olemassa ---
+  const modulePath = path.join(__dirname, "uiPanelScaffold.ts");
+  assert(fs.existsSync(modulePath), "uiPanelScaffold.ts is missing");
+
+  // --- Test 2: createPanelScaffold toimii ---
+  const panel = createPanelScaffold("Test Panel");
+  assert(typeof panel === "object", "createPanelScaffold did not return an object");
+
+  // --- Test 3: title on validi ---
+  assert(typeof panel.title === "string", "panel.title invalid");
+
+  // --- Test 4: style on validi ---
+  assert(typeof panel.style === "object", "panel.style missing or invalid");
+  assert(typeof panel.style.background === "string", "panel.style.background invalid");
+  assert(typeof panel.style.border === "string", "panel.style.border invalid");
+  assert(typeof panel.style.borderRadius === "string", "panel.style.borderRadius invalid");
+  assert(typeof panel.style.padding === "string", "panel.style.padding invalid");
+  assert(typeof panel.style.glowColor === "string", "panel.style.glowColor invalid");
+  assert(typeof panel.style.glowIntensity === "number", "panel.style.glowIntensity invalid");
+  assert(typeof panel.style.blur === "string", "panel.style.blur invalid");
+
+  // --- Test 5: header on validi ---
+  assert(typeof panel.header === "object", "panel.header missing or invalid");
+  assert(typeof panel.header.fontSize === "string", "panel.header.fontSize invalid");
+  assert(typeof panel.header.fontWeight === "string", "panel.header.fontWeight invalid");
+  assert(typeof panel.header.neonUnderline === "boolean", "panel.header.neonUnderline invalid");
+
+  console.log("âœ” All UIPanelScaffold tests passed.");
+  process.exit(0);
+}
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runTests();
+}
+

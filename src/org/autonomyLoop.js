@@ -1,0 +1,66 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 3 — AUTONOMY LOOP v1
+// ------------------------------------------------------------
+// Tämä kerros:
+//   - ajaa pipelineja
+//   - tarkistaa tulokset
+//   - korjaa itseään
+//   - jatkaa automaattisesti
+//
+// v1: yksinkertainen loop, ei jatkuvaa daemonia
+// v2: jatkuva taustaprosessi
+// v3: itseohjautuva organisaatiotason agentti
+// ------------------------------------------------------------
+import { planGoal } from "./taskPlanner";
+import { runPipeline } from "../brain/pipelineEngine";
+import { updateGoalStatus } from "./goalEngine";
+// ------------------------------------------------------------
+// AUTONOMY LOOP
+// ------------------------------------------------------------
+export async function runAutonomyLoop(goal) {
+    // 1) Merkitään tavoite käynnissä olevaksi
+    updateGoalStatus(goal.id, "in-progress");
+    // 2) Suunnitellaan pipeline
+    const pipeline = planGoal(goal);
+    // 3) Ajetaan pipeline
+    const result = await runPipeline(pipeline, goal.title);
+    // 4) Tarkistetaan tulos
+    if (!result.ok) {
+        updateGoalStatus(goal.id, "failed");
+        return {
+            ok: false,
+            goalId: goal.id,
+            pipelineId: pipeline.id,
+            steps: result.steps,
+            status: "failed",
+            message: "Pipeline epäonnistui. Tavoite merkitty epäonnistuneeksi."
+        };
+    }
+    // 5) Merkitään tavoite valmiiksi
+    updateGoalStatus(goal.id, "completed");
+    return {
+        ok: true,
+        goalId: goal.id,
+        pipelineId: pipeline.id,
+        steps: result.steps,
+        status: "completed",
+        message: "Tavoite suoritettu onnistuneesti."
+    };
+}
+// ------------------------------------------------------------
+// SUORA KÄYTTÖ (CLI)
+// ------------------------------------------------------------
+if (require.main === module) {
+    const exampleGoal = {
+        id: "demo",
+        title: "Testaa autonominen loop",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        status: "pending",
+        priority: 1,
+        tags: []
+    };
+    runAutonomyLoop(exampleGoal).then(res => {
+        console.log(JSON.stringify(res, null, 2));
+    });
+}

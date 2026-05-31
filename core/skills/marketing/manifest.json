@@ -1,0 +1,11 @@
+{
+  "name": "MarketingSkill",
+  "description": "Markkinointitekstit, kampanjat, myyntipuheet, some-kampanjat.",
+  "capabilities": [
+    "generate_marketing_copy",
+    "generate_campaigns",
+    "generate_sales_copy",
+    "generate_social_campaigns"
+  ],
+  "status": "active"
+}

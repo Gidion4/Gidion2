@@ -1,0 +1,11 @@
+{
+  "name": "CreativitySkill",
+  "description": "Luova kirjoittaminen, ideointi, konseptointi.",
+  "capabilities": [
+    "creative_writing",
+    "concept_generation",
+    "storytelling",
+    "idea_expansion"
+  ],
+  "status": "active"
+}

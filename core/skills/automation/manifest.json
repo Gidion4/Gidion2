@@ -1,0 +1,10 @@
+{
+  "name": "AutomationSkill",
+  "description": "Automaatioprosessien suunnittelu (ei oikeaa rahaliikennettä).",
+  "capabilities": [
+    "workflow_planning",
+    "routine_planning",
+    "task_automation_design"
+  ],
+  "status": "active"
+}

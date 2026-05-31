@@ -1,0 +1,71 @@
+﻿// ------------------------------------------------------------
+// GIDION ULTRAHYBRID LEVEL 6 â€” OPTIMIZATION METRICS v2 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// TÃ¤mÃ¤ moduuli kerÃ¤Ã¤ ja normalisoi Gidionin sisÃ¤isiÃ¤ metriikoita
+// optimointikerrosta varten.
+// ------------------------------------------------------------
+
+import { runSelfHealingOrchestration } from "./systemSelfHealingOrchestrator.js";
+import { runRepairOrchestration } from "./systemRepairOrchestrator.js";
+
+export interface OptimizationMetrics {
+  timestamp: string;
+
+  health: {
+    healthy: boolean;
+    issues: number;
+    requiresManualReview: boolean;
+  };
+
+  selfHealing: {
+    plannedActions: number;
+    executedDryRunActions: number;
+    dryRunAllSuccessful: boolean;
+  };
+
+  repair: {
+    plannedActions: number;
+    executedSteps: number;
+    fullyRepaired: boolean;
+  };
+}
+
+export async function collectOptimizationMetrics(): Promise<OptimizationMetrics> {
+  const selfHealing = await runSelfHealingOrchestration();
+  const repair = await runRepairOrchestration();
+
+  return {
+    timestamp: new Date().toISOString(),
+
+    health: {
+      healthy: selfHealing.coreReport.healthy,
+      issues: selfHealing.coreReport.issues.length,
+      requiresManualReview: selfHealing.healingPlan.requiresManualReview
+    },
+
+    selfHealing: {
+      plannedActions: selfHealing.healingPlan.actions.length,
+      executedDryRunActions: selfHealing.executionReport.actions.length,
+      dryRunAllSuccessful: selfHealing.executionReport.allSuccessful
+    },
+
+    repair: {
+      plannedActions: repair.healingPlan.actions.length,
+      executedSteps: repair.repairExecution.steps.length,
+      fullyRepaired: repair.fullyRepaired
+    }
+  };
+}
+
+
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  collectOptimizationMetrics().then((metrics) => {
+    console.log("Gidion UltraHybrid Level 6 â€” Optimization Metrics");
+    console.log(JSON.stringify(metrics, null, 2));
+  });
+}
+

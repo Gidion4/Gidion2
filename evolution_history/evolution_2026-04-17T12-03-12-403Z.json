@@ -1,0 +1,180 @@
+{
+  "timestamp": "2026-04-17T12:03:12.403Z",
+  "moduleMetrics": {
+    "totalFiles": 18,
+    "totalLines": 828,
+    "avgLinesPerFile": 46,
+    "largestFiles": [
+      {
+        "path": "src\\core\\evolution-engine-3.ts",
+        "lines": 119
+      },
+      {
+        "path": "src\\core\\evolution.ts",
+        "lines": 95
+      },
+      {
+        "path": "src\\core\\architecture-map.ts",
+        "lines": 91
+      },
+      {
+        "path": "src\\core\\inspector.ts",
+        "lines": 82
+      },
+      {
+        "path": "src\\core\\modularity.ts",
+        "lines": 82
+      },
+      {
+        "path": "src\\core\\agent-engine.ts",
+        "lines": 81
+      },
+      {
+        "path": "src\\core\\writer.ts",
+        "lines": 75
+      },
+      {
+        "path": "src\\core\\server.ts",
+        "lines": 58
+      },
+      {
+        "path": "src\\core\\codegen.ts",
+        "lines": 38
+      },
+      {
+        "path": "src\\core\\gidion-core.ts",
+        "lines": 38
+      }
+    ]
+  },
+  "architectureMap": {
+    "nodes": [
+      {
+        "file": "src\\core\\agent-engine.ts",
+        "imports": [
+          "./inspector",
+          "./codegen",
+          "./writer",
+          "./modularity",
+          "./architecture-map",
+          "./evolution-memory",
+          "./evolution-engine-3"
+        ]
+      },
+      {
+        "file": "src\\core\\architecture-map.ts",
+        "imports": [
+          "fs",
+          "path"
+        ]
+      },
+      {
+        "file": "src\\core\\codegen.ts",
+        "imports": [
+          "../tools/ollama",
+          "./agent-engine",
+          "./inspector"
+        ]
+      },
+      {
+        "file": "src\\core\\controller.ts",
+        "imports": []
+      },
+      {
+        "file": "src\\core\\evolution-engine-3.ts",
+        "imports": [
+          "./agent-engine"
+        ]
+      },
+      {
+        "file": "src\\core\\evolution-memory.ts",
+        "imports": [
+          "fs",
+          "path"
+        ]
+      },
+      {
+        "file": "src\\core\\evolution.ts",
+        "imports": [
+          "../tools/ollama",
+          "./agent-engine",
+          "./inspector",
+          "./codegen"
+        ]
+      },
+      {
+        "file": "src\\core\\flow.ts",
+        "imports": []
+      },
+      {
+        "file": "src\\core\\gidion-core.ts",
+        "imports": [
+          "readline",
+          "../tools/ollama"
+        ]
+      },
+      {
+        "file": "src\\core\\healthcheck.ts",
+        "imports": [
+          "axios"
+        ]
+      },
+      {
+        "file": "src\\core\\inspector.ts",
+        "imports": [
+          "fs",
+          "path",
+          "../tools/ollama",
+          "./agent-engine"
+        ]
+      },
+      {
+        "file": "src\\core\\modularity.ts",
+        "imports": [
+          "fs",
+          "path"
+        ]
+      },
+      {
+        "file": "src\\core\\server.ts",
+        "imports": [
+          "http",
+          "ws",
+          "../tools/ollama"
+        ]
+      },
+      {
+        "file": "src\\core\\writer.ts",
+        "imports": [
+          "fs",
+          "path",
+          "readline",
+          "./evolution"
+        ]
+      },
+      {
+        "file": "src\\tools\\filesystem.ts",
+        "imports": []
+      },
+      {
+        "file": "src\\tools\\ollama.ts",
+        "imports": [
+          "axios"
+        ]
+      },
+      {
+        "file": "src\\tools\\shell.ts",
+        "imports": []
+      },
+      {
+        "file": "src\\tools\\web.ts",
+        "imports": []
+      }
+    ],
+    "totalFiles": 18
+  },
+  "inspectionReport": "**Ytimekäs yleiskuvaus nykytilasta**\n\nGidion on TypeScript-projekti, joka käyttää Node.js- ja ts-node-ympäristössä. Projektissa on useita eri osia, kuten agent-engine, inspector, codegen, evolution-engine-3, modulaarisuus, arkkitehtuuri, itsekehityskyky ja evoluutiomoottori. Gidionilla on tavoitteena parantaa itsenäistymiskykyään.\n\n**Lista tärkeimmistä parannuskohteista (bullet-lista)**\n\n* Paranna modulaarisuutta, jotta projektin osat ovat helpommin yhdistettävissä\n* Lisää itsekehityskykyä, jotta Gidion voi olla itsenäinen ja muokkaa omaa koodiaan\n* Paranna arkkitehtuuria, jotta projektin rakennetta voidaan helpommin ymmärtää\n* Vähentää riippuvuuksia, jotta Gidion on helpommin konservoitu\n* Lisää evoluutiomoottorin toimintaa, jotta Gidion voi olla itsenäinen ja muokkaa omaa koodiaan\n\n**Konkreettiset ehdotukset, miten Gidion voisi kehittää itseään (itse-evoluutio)**\n\n1. **Modulaarisuuden parantaminen**: Lisää modulointiin liittyviä funktioita ja luokkia, jotta projektin osat ovat helpommin yhdistettävissä.\n2. **Itsekehityskyky**: Lisää Gidionilla olevaa itsekehityskykyä, jotta se voi olla itsenäinen ja muokkaa omaa koodiaan.\n3. **Arkkitehtuuri**: Paranna Gidionin arkkitehtuuria, jotta projektin rakennetta voidaan helpommin ymmärtää.\n4. **Evoluutiomoottori**: Lisää evoluutiomoottorin toimintaa, jotta Gidion voi olla itsenäinen ja muokkaa omaa koodiaan.\n5. **Riippuvuuksien vähentäminen**: Vähennä riippuvuuksia, jotta Gidion on helpommin konservoitu.\n\nThese are some concrete suggestions for how Gidion can improve itself:\n\n1. **Improve modularity**: Add more modular functions and classes to make the project's components easier to combine.\n2. **Increase self-sufficiency**: Increase Gidion's ability to be self-sufficient and modify its own code.\n3. **Improve architecture**: Improve Gidion's architecture, making it easier to understand the project's structure.\n4. **Evolutionary engine**: Add more functionality to the evolutionary engine, allowing Gidion to evolve independently.\n5. **Reduce dependencies**: Reduce dependencies, making Gidion easier to conserve.\n\nBy implementing these suggestions, Gidion can improve its overall performance and be a more reliable and self-sufficient system.",
+  "codeSuggestions": "As Gideon's code generator, I propose the following concrete modules, files, or classes that can enhance Gidion's self-evolutionary capabilities:\n\n**1. Modulaarisuuden parantaminen (Modularity Enhancement)**\n\n* Create a new module called `modularization` with the following files:\n\t+ `moduleRegistry.ts`: A registry of available modules and their dependencies.\n\t+ `moduleLoader.ts`: A loader that can load and combine modules based on their dependencies.\n* Update existing code to use this new module.\n\n**2. Itsekehityskyky (Self-Sufficiency)**\n\n* Create a new file called `selfSufficiencyAnalyzer.ts` that analyzes the current codebase for self-sufficiency.\n* Implement a system that allows Gidion to modify its own code based on the analysis results.\n* Update existing code to use this new feature.\n\n**3. Arkkitehtuuri (Architecture Improvement)**\n\n* Create a new file called `architecture.ts` that defines the project's architecture and dependencies.\n* Implement a system that generates documentation for the architecture, making it easier to understand.\n* Update existing code to conform to the new architecture.\n\n**4. Evoluutiomoottori (Evolutionary Engine Enhancement)**\n\n* Add more functionality to the evolutionary engine by implementing a new algorithm or technique.\n* Create a new file called `evolutionaryEngineExtensions.ts` that contains the new functionality.\n* Update existing code to use this new feature.\n\n**5. Riippuvuuksien vähentäminen (Dependency Reduction)**\n\n* Identify and refactor areas of the codebase with excessive dependencies.\n* Create a new file called `dependencyAnalyzer.ts` that analyzes the codebase for dependencies.\n* Implement a system that reduces or eliminates unnecessary dependencies, making Gidion more self-sufficient.\n\nThese patches aim to enhance Gidion's self-evolutionary capabilities by improving modularity, self-sufficiency, architecture, evolutionary engine, and reducing dependencies.",
+  "evolutionPlan": "EVOLUTION_PLAN_3.0\n\nTavoite: Parantaa Gidionin arkkitehtuuria deterministisen itseanalyysin pohjalta, ilman Ollamaa.\n\n1) Nykytilan analyysin tiivistelmä:\n**Ytimekäs yleiskuvaus nykytilasta**\n\nGidion on TypeScript-projekti, joka käyttää Node.js- ja ts-node-ympäristössä. Projektissa on useita eri osia, kuten agent-engine, inspector, codegen, evolution-engine-3, modulaarisuus, arkkitehtuuri, itsekehityskyky ja evoluutiomoottori. Gidionilla on tavoitteena parantaa itsenäistymiskykyään.\n\n**Lista tärkeimmistä parannuskohteista (bullet-lista)**\n\n* Paranna modulaarisuutta, jotta projektin osat ovat helpommin yhdistettävissä\n* Lisää itsekehityskykyä, jotta Gidion voi olla itsenäinen ja muokkaa omaa koodiaan\n* Paranna arkkitehtuuria, jotta projektin rakennetta voidaan helpommin ymmärtää\n* Vähentää riippuvuuksia, jotta Gidion on helpommin konservoitu\n\n2) Modulaarisuus- ja arkkitehtuurihavainnot:\nSeuraavat tiedostot ovat selvästi keskiarvoa suurempia ja hyviä refaktorointikandidaatteja:\n- src\\core\\evolution-engine-3.ts (119 riviä)\n- src\\core\\evolution.ts (95 riviä)\n- src\\core\\architecture-map.ts (91 riviä)\n- src\\core\\inspector.ts (82 riviä)\n- src\\core\\modularity.ts (82 riviä)\n- src\\core\\agent-engine.ts (81 riviä)\n- src\\core\\writer.ts (75 riviä)\n\nSyklisiä riippuvuuksia ei havaittu yksinkertaisessa analyysissä.\n\n3) Tässä kierroksessa ei generoida automaattisia patch-muutoksia, vain analyysi ja suunnitelma.\n   Seuraava askel: rajataan yksi iso tiedosto ja suunnitellaan sille konkreettinen refaktorointipatch.",
+  "appliedPatches": []
+}

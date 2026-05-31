@@ -1,0 +1,62 @@
+// ------------------------------------------------------------
+// GIDION LEVEL 5 — REPAIR DASHBOARD DATA TEST v1 (ESM-COMPATIBLE)
+// ------------------------------------------------------------
+// Testaa systemRepairDashboardData.ts -moduulin keskeiset toiminnot:
+//   - getRepairDashboardData palauttaa validin DashboardData-olion
+//   - kaikki pääkentät ovat olemassa ja oikeassa muodossa
+//   - UI-kerros saa deterministisen, käyttövalmiin datarakenteen
+// ------------------------------------------------------------
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { getRepairDashboardData } from "./systemRepairDashboardData.ts";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+function assert(condition, message) {
+    if (!condition) {
+        console.error("✖ TEST FAILED:", message);
+        process.exit(1);
+    }
+}
+async function runTests() {
+    console.log("Running RepairDashboardData tests...");
+    // --- Test 1: systemRepairDashboardData.ts olemassa ---
+    const modulePath = path.join(__dirname, "systemRepairDashboardData.ts");
+    assert(fs.existsSync(modulePath), "systemRepairDashboardData.ts is missing");
+    // --- Test 2: getRepairDashboardData toimii ---
+    const data = await getRepairDashboardData();
+    assert(typeof data === "object", "getRepairDashboardData did not return an object");
+    // --- Test 3: timestamp on validi ---
+    assert(typeof data.timestamp === "string", "timestamp missing or invalid");
+    // --- Test 4: repairStatus on validi ---
+    assert(typeof data.repairStatus === "object", "repairStatus missing or invalid");
+    assert(typeof data.repairStatus.fullyRepaired === "boolean", "repairStatus.fullyRepaired invalid");
+    assert(typeof data.repairStatus.plannedActions === "number", "repairStatus.plannedActions invalid");
+    assert(typeof data.repairStatus.executedSteps === "number", "repairStatus.executedSteps invalid");
+    // --- Test 5: planned on array ---
+    assert(Array.isArray(data.planned), "planned is not an array");
+    if (data.planned.length > 0) {
+        for (const p of data.planned) {
+            assert(typeof p.issueKey === "string", "planned.issueKey invalid");
+            assert(typeof p.severity === "string", "planned.severity invalid");
+            assert(Array.isArray(p.steps), "planned.steps is not an array");
+        }
+    }
+    // --- Test 6: executed on array ---
+    assert(Array.isArray(data.executed), "executed is not an array");
+    if (data.executed.length > 0) {
+        for (const e of data.executed) {
+            assert(typeof e.actionKey === "string", "executed.actionKey invalid");
+            assert(typeof e.success === "boolean", "executed.success invalid");
+            assert(typeof e.message === "string", "executed.message invalid");
+        }
+    }
+    console.log("✔ All RepairDashboardData tests passed.");
+    process.exit(0);
+}
+// ------------------------------------------------------------
+// CLI ENTRYPOINT (ESM)
+// ------------------------------------------------------------
+if (import.meta.url === `file://${process.argv[1]}`) {
+    runTests();
+}
